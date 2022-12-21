@@ -118,7 +118,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  localPivotPoint: {x: 0, y: 3.5, z: 0}
-  distanceToHost: 5
+  localPivotPoint: {x: 0, y: 3, z: 0}
+  distanceToHost: 6
   verticalArc: 85
   mouseSensitivity: 50
