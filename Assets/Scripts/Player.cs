@@ -16,8 +16,9 @@ public class Player : NetworkBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Animator animator;
 
-    void Awake()
+    void Start()
     {
+        if (!isLocalPlayer) return;
         cam = Instantiate(cam);
         cam.Host = transform;
         animator.speed = movementSpeed /5f;

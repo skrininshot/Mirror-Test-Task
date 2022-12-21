@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6554238541729922338}
   - component: {fileID: 2727786658122889056}
   - component: {fileID: 8653424489843780138}
+  - component: {fileID: 2190123459526192667}
   - component: {fileID: 5561760338454736999}
   m_Layer: 0
   m_Name: Follow Camera
@@ -85,6 +86,23 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46352538767971060}
   m_Enabled: 1
+--- !u!114 &2190123459526192667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46352538767971060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 1986140879
+  serverOnly: 0
+  visible: 0
+  hasSpawned: 0
 --- !u!114 &5561760338454736999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +115,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2db1da094b14864dbfbe843667aa38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0.1
   localPivotPoint: {x: 0, y: 3.5, z: 0}
   distanceToHost: 5
-  mouseSensitivity: 50
   verticalArc: 85
+  mouseSensitivity: 50

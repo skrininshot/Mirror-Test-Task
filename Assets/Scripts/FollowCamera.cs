@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 [RequireComponent(typeof(Camera))]
-public class FollowCamera : MonoBehaviour
+public class FollowCamera : NetworkBehaviour
 {
     public Transform Host { get; set; }
     [Header("Movement")]
@@ -18,9 +17,9 @@ public class FollowCamera : MonoBehaviour
 
     private void Awake()
     {
-        Camera.SetupCurrent(GetComponent<Camera>());
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        Camera.SetupCurrent(GetComponent<Camera>());
     }
 
     private void LateUpdate()
