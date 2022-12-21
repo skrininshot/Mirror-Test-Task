@@ -1110,9 +1110,9 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  movementSpeed: 3
   strafeDistance: 2
   confusedTime: 3
+  movementSpeed: 8
   cam: {fileID: 5561760338454736999, guid: c5c1cccfac5984b4dab7a27383cdb544, type: 3}
   rb: {fileID: 2028305192838007302}
   animator: {fileID: 8018106509046691483}
