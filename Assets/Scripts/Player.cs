@@ -1,22 +1,49 @@
 using UnityEngine;
 using Mirror;
 
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody))]
 public class Player : NetworkBehaviour
 {
-    public override void OnStartLocalPlayer()
+    [Header("Movement")]
+    [SerializeField] [Range(1,5)] private float movementSpeed = 3f;
+    [SerializeField] private float strafeDistance = 2f;
+    [SerializeField] private float confusedTime = 3f;
+    private int confuseAmount = 0;
+
+    [Header("Components")]
+    [SerializeField] private FollowCamera cam;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private Animator animator;
+    private Transform rotatingOrigin;
+
+    void Awake()
     {
-        Camera.main.transform.SetParent(transform);
-        Camera.main.transform.localPosition = new Vector3(0, 0, 0);
+        cam = Instantiate(cam);
+        cam.Host = transform;
+        rotatingOrigin = Instantiate(new GameObject()).transform;
     }
 
     void Update()
     {
-        if (!isLocalPlayer) { return; }
+        if (!isLocalPlayer) return;
+        Move();
+    }
 
-        float moveX = Input.GetAxis("Horizontal") * Time.deltaTime * 110.0f;
-        float moveZ = Input.GetAxis("Vertical") * Time.deltaTime * 4f;
+    private void Move()
+    {
+        float horziontalSpeed = Input.GetAxis("Horizontal");
+        float verticalSpeed = Input.GetAxis("Vertical");
+        animator.SetFloat("speed", verticalSpeed != 0 ? verticalSpeed : Mathf.Abs(horziontalSpeed));
 
-        transform.Rotate(0, moveX, 0);
-        transform.Translate(0, 0, moveZ);
+        Vector3 move = (horziontalSpeed * cam.transform.right) + (verticalSpeed * cam.transform.forward);
+        Vector3 velocity = Vector3.ClampMagnitude(move, 1) * movementSpeed;
+        if (velocity != Vector3.zero)
+        {
+            rotatingOrigin.transform.forward = velocity;
+            transform.localEulerAngles = new Vector3(0, rotatingOrigin.transform.localEulerAngles.y);
+        }
+        velocity.y = rb.velocity.y;
+        rb.velocity = velocity;
     }
 }
