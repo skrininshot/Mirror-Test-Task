@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
-public class GameManager : NetworkBehaviour
+public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    [SerializeField] private int maxRestartGameTime;
+    [SerializeField] private int restartGameTime;
     [SerializeField] private int winningConfusesAmount;
     public int WinningConfusesAmount { get => winningConfusesAmount; }
     private int remainingTime;
@@ -16,9 +15,30 @@ public class GameManager : NetworkBehaviour
         Instance = this;
     }
 
-    [ClientRpc]
     public void Win()
     {
-        Debug.Log("Win");
+        StartCoroutine(RemainingTimeCounter());
+    }
+
+    private IEnumerator RemainingTimeCounter()
+    {
+        PlayerUI.Instance.Win();
+        remainingTime = restartGameTime;
+        while (remainingTime > 0)
+        {
+            PlayerUI.Instance.UpdateTime(remainingTime);
+            remainingTime--;
+            yield return new WaitForSeconds(1);         
+        }
+        RestartGame();
+        PlayerUI.Instance.Clear();
+    }
+
+    private void RestartGame()
+    {
+        foreach(Player player in FindObjectsOfType<Player>())
+        {
+            player.Respawn();
+        }
     }
 }

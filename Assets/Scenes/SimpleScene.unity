@@ -1637,6 +1637,7 @@ GameObject:
   - component: {fileID: 1296454210}
   - component: {fileID: 1296454209}
   - component: {fileID: 1296454208}
+  - component: {fileID: 1296454212}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -1673,7 +1674,7 @@ MonoBehaviour:
   Port: 7777
   DualMode: 1
   NoDelay: 1
-  Interval: 5
+  Interval: 100
   Timeout: 10000
   FastResend: 2
   CongestionWindow: 0
@@ -1703,12 +1704,12 @@ MonoBehaviour:
   runInBackground: 1
   autoStartServerBuild: 1
   autoConnectClientBuild: 0
-  sendRate: 30
+  sendRate: 60
   offlineScene: Assets/Scenes/SimpleScene.unity
   onlineScene: Assets/Scenes/SimpleScene.unity
   transport: {fileID: 1296454209}
   networkAddress: localhost
-  maxConnections: 100
+  maxConnections: 10
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 3669858769790318171, guid: b0abc731b3f817d4a95dfd42f688f650, type: 3}
   autoCreatePlayer: 1
@@ -1730,6 +1731,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1296454212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296454207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03e1ee5b1a10fd546bc89e787252c12e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  restartGameTime: 5
+  winningConfusesAmount: 3
 --- !u!1 &1298720875
 GameObject:
   m_ObjectHideFlags: 0

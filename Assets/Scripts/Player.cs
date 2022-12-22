@@ -16,7 +16,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private float strafeDistance;
     [SerializeField] private float strafingSpeed;
     private Vector3 strafingPoint;
-    private bool isStrafing;
+    [SyncVar] private bool isStrafing;
 
     [Header("Components")]
     [SerializeField] private FollowCamera cam;
@@ -30,9 +30,9 @@ public class Player : NetworkBehaviour
     [SerializeField] private Material confusedMaterial;
     [SerializeField] private float confusingDuration;
     [SerializeField] private Text confusesAmoutText;
-    private int confusesAmount = 0;
+    [SyncVar] private int confusesAmount = 0;
+    [SyncVar] private bool isConfused;
     private Material defaultMaterial;
-    private bool isConfused;
 
     void Start()
     {
@@ -107,12 +107,22 @@ public class Player : NetworkBehaviour
     private IEnumerator Confused()
     {
         isConfused = true;
-        meshBody.material = confusedMaterial;
-        meshHelmet.material = confusedMaterial;
+        SetConfusedMaterial();
 
         yield return new WaitForSeconds(confusingDuration);
 
         isConfused = false;
+        SetDefaultMaterial();
+    }
+
+    private void SetConfusedMaterial()
+    {
+        meshBody.material = confusedMaterial;
+        meshHelmet.material = confusedMaterial;
+    }
+
+    private void SetDefaultMaterial()
+    {
         meshBody.material = defaultMaterial;
         meshHelmet.material = defaultMaterial;
     }
@@ -127,6 +137,10 @@ public class Player : NetworkBehaviour
     {
         confusesAmount++;
         confusesAmoutText.text = confusesAmount.ToString();
+        if (confusesAmount >= GameManager.Instance.WinningConfusesAmount)
+        {
+            GameManager.Instance.Win();
+        }
     }
 
     private void Move()
@@ -151,5 +165,24 @@ public class Player : NetworkBehaviour
     {
         transform.forward = Vector3.forward;
         transform.localEulerAngles = new Vector3(0, cam.transform.localEulerAngles.y, 0);
+    }
+
+    [ClientRpc]
+    public void Respawn()
+    {
+        SetDefaultValues();
+        Transform newPosition = NetworkManager.singleton.GetStartPosition();
+        transform.position = newPosition.position;
+        transform.rotation = newPosition.rotation;
+    }
+
+    private void SetDefaultValues()
+    {
+        StopAllCoroutines();
+        confusesAmount = 0;
+        confusesAmoutText.text = "0";
+        isConfused = false;
+        isStrafing = false;
+        rb.velocity = Vector3.zero;
     }
 }
