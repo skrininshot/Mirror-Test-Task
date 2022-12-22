@@ -7,18 +7,21 @@ public class PlayerUI : MonoBehaviour
 
     [SerializeField] private Text winnerName;
     [SerializeField] private Text restartingTime;
+    [SerializeField] private Image background;
     private string restartingText;
 
     private void Awake()
     {
         Instance = this;
+        restartingText = restartingTime.text;
     }
 
-    public void Win()
+    public void Win(string nickname)
     {
         winnerName.gameObject.SetActive(true);
+        winnerName.text = nickname;
         restartingTime.gameObject.SetActive(true);
-        restartingText = restartingTime.text;
+        background.gameObject.SetActive(true);
     }
 
     public void UpdateTime(int seconds)
@@ -31,5 +34,6 @@ public class PlayerUI : MonoBehaviour
         restartingTime.text = restartingText;
         winnerName.gameObject.SetActive(false);
         restartingTime.gameObject.SetActive(false);
+        background.gameObject.SetActive(false);
     }
 }

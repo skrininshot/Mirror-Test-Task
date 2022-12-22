@@ -4,10 +4,11 @@ using UnityEngine.UI;
 using Mirror;
 using System.Collections;
 
-[RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(Rigidbody))]
 public class Player : NetworkBehaviour
 {
+    private string nickname;
+
     [Header("Movement")]
     [SerializeField] private float movementSpeed;
     private float previousFrameMagnitude;
@@ -25,6 +26,8 @@ public class Player : NetworkBehaviour
     [SerializeField] private SkinnedMeshRenderer meshBody;
     [SerializeField] private SkinnedMeshRenderer meshHelmet;
     [SerializeField] private PlayerUI UI;
+    [SerializeField] private TextMesh nicknameText;
+    [SerializeField] private TextMesh scoreText;
 
     [Header("Confusing")]
     [SerializeField] private Material confusedMaterial;
@@ -34,20 +37,32 @@ public class Player : NetworkBehaviour
     [SyncVar] private bool isConfused;
     private Material defaultMaterial;
 
+    private bool inputStrafe;
+
     void Start()
     {
+        nickname = "Player " + GetComponent<NetworkIdentity>().netId.ToString();
+
         animator.speed = movementSpeed / 6f;
         defaultMaterial = meshBody.material;
+        nicknameText.text = nickname;
+        scoreText.text = confusesAmount.ToString();
 
         if (!isLocalPlayer) return;
 
+        scoreText.gameObject.SetActive(false);
         UI = Instantiate(UI);
         confusesAmoutText = Instantiate(confusesAmoutText, UI.transform);
         cam = Instantiate(cam);
         cam.Host = transform;
     }
 
-    void FixedUpdate()
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0)) inputStrafe = true;
+    }
+
+    private void FixedUpdate()
     {
         if (!isLocalPlayer) return;
         
@@ -59,32 +74,35 @@ public class Player : NetworkBehaviour
         {
             Move();
 
-            if (Input.GetMouseButtonDown(0))
+            if (inputStrafe)
             {
+                inputStrafe = false;
                 isStrafing = true;
                 SetForwardByCamera();
                 strafingPoint = transform.position + transform.forward * strafeDistance;
+                Debug.Log("Strafe Start");
             }
         }
-        previousFrameMagnitude = rb.velocity.magnitude;
 
+        previousFrameMagnitude = rb.velocity.magnitude;
     }
 
     private void Strafe()
     {
         rb.velocity = Vector3.ClampMagnitude(strafingPoint - transform.position, strafeDistance) * strafingSpeed;
 
-        if (Mathf.Abs(rb.velocity.magnitude - previousFrameMagnitude) < 0.2f)
+        if (Mathf.Abs(rb.velocity.magnitude - previousFrameMagnitude) < 2f)
         {
             isStrafing = false;
+            Debug.Log("End Strafe");
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         if (!isStrafing) return;
 
-        Player another = collision.gameObject.GetComponent<Player>();
+        Player another = other.gameObject.GetComponent<Player>();
         if (another == null) return;
         ConfuseAnotherPlayer(another);
     }
@@ -137,9 +155,15 @@ public class Player : NetworkBehaviour
     {
         confusesAmount++;
         confusesAmoutText.text = confusesAmount.ToString();
+
+        if (!isLocalPlayer)
+        {
+            scoreText.text = confusesAmount.ToString();
+        }
+
         if (confusesAmount >= GameManager.Instance.WinningConfusesAmount)
         {
-            GameManager.Instance.Win();
+            GameManager.Instance.Win(nickname);
         }
     }
 
@@ -179,8 +203,10 @@ public class Player : NetworkBehaviour
     private void SetDefaultValues()
     {
         StopAllCoroutines();
+        SetDefaultMaterial();
         confusesAmount = 0;
         confusesAmoutText.text = "0";
+        scoreText.text = "0";
         isConfused = false;
         isStrafing = false;
         rb.velocity = Vector3.zero;

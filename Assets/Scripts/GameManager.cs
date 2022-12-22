@@ -9,34 +9,42 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int winningConfusesAmount;
     public int WinningConfusesAmount { get => winningConfusesAmount; }
     private int remainingTime;
+    private bool win;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    public void Win()
+    public void Win(string nickname)
     {
+        if (win) return;
+
+        win = true;
+        PlayerUI.Instance.Win(nickname);
         StartCoroutine(RemainingTimeCounter());
     }
 
     private IEnumerator RemainingTimeCounter()
     {
-        PlayerUI.Instance.Win();
         remainingTime = restartGameTime;
+
         while (remainingTime > 0)
         {
             PlayerUI.Instance.UpdateTime(remainingTime);
             remainingTime--;
             yield return new WaitForSeconds(1);         
         }
-        RestartGame();
-        PlayerUI.Instance.Clear();
+
+        RestartGame();    
     }
 
     private void RestartGame()
     {
-        foreach(Player player in FindObjectsOfType<Player>())
+        win = false;
+        PlayerUI.Instance.Clear();
+
+        foreach (Player player in FindObjectsOfType<Player>())
         {
             player.Respawn();
         }
