@@ -2,7 +2,7 @@ using UnityEngine;
 using Mirror;
 
 [RequireComponent(typeof(Camera))]
-public class FollowCamera : NetworkBehaviour
+public class FollowCamera :MonoBehaviour
 {
     public Transform Host { get; set; }
     [Header("Movement")]

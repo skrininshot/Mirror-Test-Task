@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 using System.Collections;
 
@@ -24,9 +25,10 @@ public class Player : NetworkBehaviour
     [SerializeField] private SkinnedMeshRenderer meshBody;
     [SerializeField] private SkinnedMeshRenderer meshHelmet;
 
-    [Header("Condusing")]
-    [SerializeField] private float confusingDuration;
+    [Header("Confusing")]
     [SerializeField] private Material confusedMaterial;
+    [SerializeField] private float confusingDuration;
+    private int confusesAmount = 0;
     private Material defaultMaterial;
     private bool isConfused;
 
@@ -36,9 +38,9 @@ public class Player : NetworkBehaviour
         defaultMaterial = meshBody.material;
 
         if (!isLocalPlayer) return;
-
+        
         cam = Instantiate(cam);
-        cam.Host = transform; 
+        cam.Host = transform;
     }
 
     void FixedUpdate()
@@ -64,44 +66,6 @@ public class Player : NetworkBehaviour
 
     }
 
-    [ClientRpc]
-    public void SetConfused()
-    {
-        if (isConfused) return;
-        StartCoroutine(Confused());
-    }
-
-    private IEnumerator Confused()
-    {
-        isConfused = true;
-        meshBody.material = confusedMaterial;
-        meshHelmet.material = confusedMaterial;
-
-        yield return new WaitForSeconds(confusingDuration);
-
-        isConfused = false;
-        meshBody.material = defaultMaterial;
-        meshHelmet.material = defaultMaterial;  
-    }
-
-    private void Move()
-    {
-        float horziontalSpeed = Input.GetAxis("Horizontal");
-        float verticalSpeed = Input.GetAxis("Vertical");
-        animator.SetFloat("vertical", verticalSpeed);
-        animator.SetFloat("horizontal", horziontalSpeed);
-
-        if (horziontalSpeed + verticalSpeed != 0)
-        {
-            SetForwardByCamera();
-        }
-
-        Vector3 move = (horziontalSpeed * transform.right) + (verticalSpeed * transform.forward);
-        Vector3 velocity = Vector3.ClampMagnitude(move, 1) * movementSpeed;
-        velocity.y = rb.velocity.y;
-        rb.velocity = velocity;
-    }
-
     private void Strafe()
     {
         rb.velocity = Vector3.ClampMagnitude(strafingPoint - transform.position, strafeDistance) * strafingSpeed;
@@ -124,7 +88,58 @@ public class Player : NetworkBehaviour
     [Command]
     private void ConfuseAnotherPlayer(Player player)
     {
-        player.SetConfused();
+        player.GetConfused(this);
+    }
+
+    [ClientRpc]
+    public void GetConfused(Player strafingPlayer)
+    {
+        if (isConfused) return;
+
+        StartCoroutine(Confused());
+        SendConfuseCuccess(strafingPlayer);
+    }
+
+    private IEnumerator Confused()
+    {
+        isConfused = true;
+        meshBody.material = confusedMaterial;
+        meshHelmet.material = confusedMaterial;
+
+        yield return new WaitForSeconds(confusingDuration);
+
+        isConfused = false;
+        meshBody.material = defaultMaterial;
+        meshHelmet.material = defaultMaterial;
+    }
+
+    public void SendConfuseCuccess(Player strafingPlayer)
+    {
+        strafingPlayer.ConfuseSuccess();
+    }
+
+    [ClientRpc]
+    public void ConfuseSuccess()
+    {
+        confusesAmount++;
+    }
+
+    private void Move()
+    {
+        float horziontalSpeed = Input.GetAxis("Horizontal");
+        float verticalSpeed = Input.GetAxis("Vertical");
+        animator.SetFloat("vertical", verticalSpeed);
+        animator.SetFloat("horizontal", horziontalSpeed);
+
+        if (horziontalSpeed + verticalSpeed != 0)
+        {
+            SetForwardByCamera();
+        }
+
+        Vector3 move = (horziontalSpeed * transform.right) + (verticalSpeed * transform.forward);
+        Vector3 velocity = Vector3.ClampMagnitude(move, 1) * movementSpeed;
+        velocity.y = rb.velocity.y;
+        rb.velocity = velocity;
     }
 
     private void SetForwardByCamera()
