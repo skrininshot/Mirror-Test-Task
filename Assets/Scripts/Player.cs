@@ -24,10 +24,12 @@ public class Player : NetworkBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private SkinnedMeshRenderer meshBody;
     [SerializeField] private SkinnedMeshRenderer meshHelmet;
+    [SerializeField] private PlayerUI UI;
 
     [Header("Confusing")]
     [SerializeField] private Material confusedMaterial;
     [SerializeField] private float confusingDuration;
+    [SerializeField] private Text confusesAmoutText;
     private int confusesAmount = 0;
     private Material defaultMaterial;
     private bool isConfused;
@@ -38,7 +40,9 @@ public class Player : NetworkBehaviour
         defaultMaterial = meshBody.material;
 
         if (!isLocalPlayer) return;
-        
+
+        UI = Instantiate(UI);
+        confusesAmoutText = Instantiate(confusesAmoutText, UI.transform);
         cam = Instantiate(cam);
         cam.Host = transform;
     }
@@ -122,6 +126,7 @@ public class Player : NetworkBehaviour
     public void ConfuseSuccess()
     {
         confusesAmount++;
+        confusesAmoutText.text = confusesAmount.ToString();
     }
 
     private void Move()
