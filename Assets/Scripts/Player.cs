@@ -78,9 +78,9 @@ public class Player : NetworkBehaviour
             {
                 inputStrafe = false;
                 isStrafing = true;
+                animator.SetBool("kick", true);
                 SetForwardByCamera();
                 strafingPoint = transform.position + transform.forward * strafeDistance;
-                Debug.Log("Strafe Start");
             }
         }
 
@@ -94,7 +94,7 @@ public class Player : NetworkBehaviour
         if (Mathf.Abs(rb.velocity.magnitude - previousFrameMagnitude) < 2f)
         {
             isStrafing = false;
-            Debug.Log("End Strafe");
+            animator.SetBool("kick", false);
         }
     }
 
