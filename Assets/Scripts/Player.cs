@@ -21,14 +21,24 @@ public class Player : NetworkBehaviour
     [SerializeField] private FollowCamera cam;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Animator animator;
+    [SerializeField] private SkinnedMeshRenderer meshBody;
+    [SerializeField] private SkinnedMeshRenderer meshHelmet;
+
+    [Header("Condusing")]
+    [SerializeField] private float confusingDuration;
+    [SerializeField] private Material confusedMaterial;
+    private Material defaultMaterial;
+    private bool isConfused;
 
     void Start()
     {
+        animator.speed = movementSpeed / 6f;
+        defaultMaterial = meshBody.material;
+
         if (!isLocalPlayer) return;
 
         cam = Instantiate(cam);
-        cam.Host = transform;
-        animator.speed = movementSpeed / 6f;
+        cam.Host = transform; 
     }
 
     void FixedUpdate()
@@ -42,6 +52,7 @@ public class Player : NetworkBehaviour
         else
         {
             Move();
+
             if (Input.GetMouseButtonDown(0))
             {
                 isStrafing = true;
@@ -50,6 +61,27 @@ public class Player : NetworkBehaviour
             }
         }
         previousFrameMagnitude = rb.velocity.magnitude;
+
+    }
+
+    [ClientRpc]
+    public void SetConfused()
+    {
+        if (isConfused) return;
+        StartCoroutine(Confused());
+    }
+
+    private IEnumerator Confused()
+    {
+        isConfused = true;
+        meshBody.material = confusedMaterial;
+        meshHelmet.material = confusedMaterial;
+
+        yield return new WaitForSeconds(confusingDuration);
+
+        isConfused = false;
+        meshBody.material = defaultMaterial;
+        meshHelmet.material = defaultMaterial;  
     }
 
     private void Move()
@@ -78,6 +110,21 @@ public class Player : NetworkBehaviour
         {
             isStrafing = false;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!isStrafing) return;
+
+        Player another = collision.gameObject.GetComponent<Player>();
+        if (another == null) return;
+        ConfuseAnotherPlayer(another);
+    }
+
+    [Command]
+    private void ConfuseAnotherPlayer(Player player)
+    {
+        player.SetConfused();
     }
 
     private void SetForwardByCamera()

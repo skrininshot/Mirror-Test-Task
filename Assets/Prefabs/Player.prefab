@@ -725,7 +725,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -5209150659612451695, guid: 2d226e59912d0014fbf2646ed5c4b916, type: 3}
+  - {fileID: 2100000, guid: 0b7cd95419f43e94fb71ba0ca3cce3dd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1128,7 +1128,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -5209150659612451695, guid: 2d226e59912d0014fbf2646ed5c4b916, type: 3}
+  - {fileID: 2100000, guid: 0b7cd95419f43e94fb71ba0ca3cce3dd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1381,142 +1381,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: '
-
-    Transform ''LeftToeBase'' has been deleted
-
-    Transform
-    ''LeftFoot'' has been deleted
-
-    Transform ''LeftLeg'' has been deleted
-
-    Transform
-    ''LeftUpLeg'' has been deleted
-
-    Transform ''RightToeBase'' has been deleted
-
-    Transform
-    ''RightFoot'' has been deleted
-
-    Transform ''RightLeg'' has been deleted
-
-    Transform
-    ''RightUpLeg'' has been deleted
-
-    Transform ''LeftHandIndex3'' has been deleted
-
-    Transform
-    ''LeftHandIndex2'' has been deleted
-
-    Transform ''LeftHandIndex1'' has been
-    deleted
-
-    Transform ''LeftHandMiddle3'' has been deleted
-
-    Transform ''LeftHandMiddle2''
-    has been deleted
-
-    Transform ''LeftHandMiddle1'' has been deleted
-
-    Transform
-    ''LeftHandPinky3'' has been deleted
-
-    Transform ''LeftHandPinky2'' has been
-    deleted
-
-    Transform ''LeftHandPinky1'' has been deleted
-
-    Transform ''LeftHandRing3''
-    has been deleted
-
-    Transform ''LeftHandRing2'' has been deleted
-
-    Transform
-    ''LeftHandRing1'' has been deleted
-
-    Transform ''LeftHandThumb3'' has been
-    deleted
-
-    Transform ''LeftHandThumb2'' has been deleted
-
-    Transform ''LeftHandThumb1''
-    has been deleted
-
-    Transform ''LeftHand'' has been deleted
-
-    Transform
-    ''LeftForeArm'' has been deleted
-
-    Transform ''LeftArm'' has been deleted
-
-    Transform
-    ''LeftShoulder'' has been deleted
-
-    Transform ''Head'' has been deleted
-
-    Transform
-    ''Neck'' has been deleted
-
-    Transform ''RightHandIndex3'' has been deleted
-
-    Transform
-    ''RightHandIndex2'' has been deleted
-
-    Transform ''RightHandIndex1'' has been
-    deleted
-
-    Transform ''RightHandMiddle3'' has been deleted
-
-    Transform ''RightHandMiddle2''
-    has been deleted
-
-    Transform ''RightHandMiddle1'' has been deleted
-
-    Transform
-    ''RightHandPinky3'' has been deleted
-
-    Transform ''RightHandPinky2'' has been
-    deleted
-
-    Transform ''RightHandPinky1'' has been deleted
-
-    Transform ''RightHandRing3''
-    has been deleted
-
-    Transform ''RightHandRing2'' has been deleted
-
-    Transform
-    ''RightHandRing1'' has been deleted
-
-    Transform ''RightHandThumb3'' has been
-    deleted
-
-    Transform ''RightHandThumb2'' has been deleted
-
-    Transform ''RightHandThumb1''
-    has been deleted
-
-    Transform ''RightHand'' has been deleted
-
-    Transform
-    ''RightForeArm'' has been deleted
-
-    Transform ''RightArm'' has been deleted
-
-    Transform
-    ''RightShoulder'' has been deleted
-
-    Transform ''Spine2'' has been deleted
-
-    Transform
-    ''Spine1'' has been deleted
-
-    Transform ''Spine'' has been deleted
-
-    Transform
-    ''Hips'' has been deleted
-
-    Transform ''Armature'' has been deleted'
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -1588,6 +1453,10 @@ MonoBehaviour:
   cam: {fileID: 5561760338454736999, guid: c5c1cccfac5984b4dab7a27383cdb544, type: 3}
   rb: {fileID: 2028305192838007302}
   animator: {fileID: 8018106509046691483}
+  meshBody: {fileID: 2887937784429242756}
+  meshHelmet: {fileID: 3548894783921214520}
+  confusingDuration: 3
+  confusedMaterial: {fileID: 2100000, guid: 948c2d1e6c2c6e84eb93cb80a63ec747, type: 2}
 --- !u!114 &5151531068336533920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1606,7 +1475,7 @@ MonoBehaviour:
   target: {fileID: 4154049178089319649}
   clientAuthority: 0
   onlySyncOnChange: 1
-  bufferResetMultiplier: 5
+  bufferResetMultiplier: 1
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
@@ -1630,7 +1499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncDirection: 0
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0.05
   clientAuthority: 1
   animator: {fileID: 8018106509046691483}
 --- !u!1 &3775720717639288010
